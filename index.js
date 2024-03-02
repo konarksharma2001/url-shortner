@@ -12,8 +12,9 @@ connectToMongoDB("mongodb://localhost:27017/short-url")
 })
 
 
-app.use(express.json()); // middleware
+app.use(express.json()); // middleware to parse incoming request into json format
 app.use("/url", urlRoute);
+app.get("/:shortId", urlRoute);
 
 app.listen(PORT, ()=> {
     console.log(`Server Started on Port ${PORT}`);
