@@ -17,7 +17,7 @@ async function generateNewShortUrl(req, res) {
         }
         catch(err){
             console.log({err});
-            return res.json({message: err.message});
+            return res.status(500).json({ message: err.message });
         }
 }
 
@@ -35,12 +35,30 @@ async function redirectToURL(req, res) {
                 },
             },
         }
-        );
+        ); 
         res.redirect(entry.redirectUrl);
     }
     catch(err){
         console.log({err});
-        return res.json({message: err.message});
+        return res.status(500).json({ message: err.message });
+    }
+}
+
+async function fetchShortUrl(req, res) {
+    try {
+        const shortId = req.params.shortId;
+        const entry = await URL.findOne({ shortId });
+
+        if (!entry) {
+            return res.status(404).json({ error: "Short URL not Generated" });
+        }
+         
+        const newShortUrl = `${req.protocol}://${req.get('host')}/${shortId}`;
+
+        return res.status(200).json({ shortUrl: newShortUrl });
+    } catch (err) {
+        console.log({ err });
+        return res.status(500).json({ message: err.message });
     }
 }
 
@@ -55,7 +73,7 @@ async function getAnalytics(req, res) {
     }
     catch(err) {
         console.log({err});
-        return res.json({message: err.message});
+        return res.status(500).json({ message: err.message });
     }
 }
 
@@ -63,4 +81,5 @@ module.exports = {
     generateNewShortUrl,
     redirectToURL,
     getAnalytics,
+    fetchShortUrl,
 };
