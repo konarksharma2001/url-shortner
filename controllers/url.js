@@ -16,7 +16,7 @@ async function generateNewShortUrl(req, res) {
         return res.json({ id: shortID});
         }
         catch(err){
-            console.log({err});
+            console.log('Unable to generate new url',{err});
             return res.status(500).json({ message: err.message });
         }
 }
